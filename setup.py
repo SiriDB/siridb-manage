@@ -16,18 +16,13 @@ see: https://bitbucket.org/anthony_tuininga/cx_freeze/
  - sudo python3 setup.py install
 
 '''
-import sys
 import os
-import platform
-import siridb
 from cx_Freeze import setup, Executable
+from version import __version__
 
-VERSION = '2.0.0'
-
-architecture = {'64bit': 'x86_64', '32bit': 'i386'}[platform.architecture()[0]]
 
 build_exe_options = {
-    'build_exe': os.path.join('build', VERSION),
+    'build_exe': os.path.join('build', __version__),
     'packages': [
         'encodings',
         'os',
@@ -40,19 +35,20 @@ build_exe_options = {
         'logging',
         'getpass',
         'uuid',
-        'pickle'],
+        'pickle',
+        'qpack',
+        'siridb'],
     'excludes': [
         'django',
         'google',
         'twisted'],
     'optimize': 2,
-    'include_files': [
-        ('../server/help', 'help')]}
+    'include_files': []}
 
 
 setup(
-    name='manage',
-    version=VERSION,
+    name='siridb-manage',
+    version=__version__,
     description='Manage tool for SiriDB',
     options={'build_exe': build_exe_options},
-    executables=[Executable('manage.py', targetName='siridb-manage')])
+    executables=[Executable('main.py', targetName='siridb-manage')])

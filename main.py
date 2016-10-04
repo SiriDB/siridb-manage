@@ -19,10 +19,10 @@ from constants import DURATIONS
 from constants import DBNAME_VALID_NAME
 from constants import MAX_BUFFER_SIZE
 from constants import DEFAULT_CONFIG
+from version import __version__
+from version import __email__
+from version import __maintainer__
 
-__version__ = '2.0.0'
-__maintainer__ = 'Jeroen van der Heijden'
-__email__ = 'jeroen@transceptor.technology'
 
 sys.path.append('/home/joente/workspace/siridb-connector/')
 from siridb.connector import SiriDBProtocol
