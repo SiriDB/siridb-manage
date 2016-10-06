@@ -19,12 +19,12 @@ from constants import DURATIONS
 from constants import DBNAME_VALID_NAME
 from constants import MAX_BUFFER_SIZE
 from constants import DEFAULT_CONFIG
+from constants import DBPROPS
 from version import __version__
+from version import __version_info__
 from version import __email__
 from version import __maintainer__
-
-
-sys.path.append('/home/joente/workspace/siridb-connector/')
+from siridb.connector import connect
 from siridb.connector import SiriDBProtocol
 from siridb.connector import async_server_info
 from siridb.connector.lib.protomap import CPROTO_REQ_LOADDB
@@ -35,7 +35,6 @@ FULL_AUTH = 'full'
 siri = None
 local_siridb_info = None
 remote_siridb_info = None
-
 
 def check_valid_dbname(dbname):
     if not isinstance(dbname, str):
@@ -345,8 +344,7 @@ async def load_database(dbpath, host, port):
 
 def connect_other(dbname, host, port, username, password):
     global siri
-    siri = client.SiriClient()
-    siri.connect(username, password, dbname, host, port)
+    siri = connect(username, password, dbname, host, port)
 
 
 def connect_to_siridb(dbname, address, port, username, password):
@@ -361,16 +359,11 @@ def connect_to_siridb(dbname, address, port, username, password):
         raise ConnectionError('User {!r} has no {!r} privileges'.format(
             username, FULL_AUTH))
 
-    # lic = result['data'][0]['value']
-    version = Version(*map(int, result['data'][0]['value'].split('.')))
+    version = result['data'][0]['value']
 
-    # if 'registered' not in lic.lower():
-    #     raise ValueError('Adding servers to a SiriDB cluster is only allowed '
-    #                      'with a valid license. ({})'.format(lic))
-
-    if version != CURRENT_VERSION:
+    if tuple(map(int, version.split('.')))[:2] != __version_info__[:2]:
         raise ValueError('SiriDB Server is running version {}, '
-                         'we are using  {}'.format(version, CURRENT_VERSION))
+                         'we are using  {}'.format(version, __version__))
 
     result = siri.query('list users name, access')
 
