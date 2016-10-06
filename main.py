@@ -28,6 +28,10 @@ from siridb.connector import connect
 from siridb.connector import SiriDBProtocol
 from siridb.connector import async_server_info
 from siridb.connector.lib.protomap import CPROTO_REQ_LOADDB
+from siridb.connector.lib.exceptions import ServerError
+from siridb.connector.lib.exceptions import PoolError
+from siridb.connector.lib.exceptions import UserAuthError
+from siridb.connector.lib.exceptions import AuthenticationError
 
 settings = Settings()
 PROMPT = '> '
