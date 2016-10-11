@@ -286,15 +286,16 @@ async def set_remote_siridb_info(host, port):
         remote_siridb_info = SiriDBInfo(*result)
 
     if remote_siridb_info is None:
-        raise RuntimeError('Error retreiving SiriDB info from {}:{}'.format(other_address, other_port))
+        raise RuntimeError(
+            'Error retreiving SiriDB info from {}:{}'.format(host, port))
 
     if not remote_siridb_info.dblist:
-        raise RuntimeError('No databases found in {}:{}'.format(other_address, other_port))
+        raise RuntimeError('No databases found in {}:{}'.format(host, port))
 
     if local_siridb_info.version != remote_siridb_info.version:
-        raise RuntimeError('Local version ({}) not equal to remote version ({})'.format(
-            local_siridb_info.version,
-            remote_siridb_info.version))
+        raise RuntimeError(
+            'Local version ({}) not equal to remote version ({})'
+            .format(local_siridb_info.version, remote_siridb_info.version))
 
 
 def check_dbname(s):
