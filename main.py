@@ -19,6 +19,7 @@ from constants import DURATIONS
 from constants import DBNAME_VALID_NAME
 from constants import MAX_BUFFER_SIZE
 from constants import DEFAULT_CONFIG
+from constants import DEFAULT_CLIENT_PORT
 from constants import DBPROPS
 from version import __version__
 from version import __version_info__
