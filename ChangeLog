@@ -1,0 +1,6 @@
+siridb-manage (2.0.0) xenial; urgency=medium
+
+  * Manage Tool for SiriDB version 2.x
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Mon, 17 Oct 2016 18:43:03 +0000
+

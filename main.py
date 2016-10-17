@@ -274,14 +274,23 @@ class SiriDBInfo():
 
 async def set_local_siridb_info(host, port):
     global local_siridb_info
-    result = await async_server_info(host, port)
-    if result:
-        local_siridb_info = SiriDBInfo(*result)
+    try:
+        result = await async_server_info(host, port)
+    except Exception as e:
+        logging.error('Connection error: {}'.format(e))
+        sys.exit(1)
+    else:
+        if result:
+            local_siridb_info = SiriDBInfo(*result)
 
 
 async def set_remote_siridb_info(host, port):
     global remote_siridb_info
-    result = await async_server_info(host, port)
+    try:
+        result = await async_server_info(host, port)
+    except:
+        result = None
+
     if result:
         remote_siridb_info = SiriDBInfo(*result)
 
@@ -1089,7 +1098,6 @@ Home-page: http://siridb.net
     # Read configuration
     settings.config_file = args.config
     settings.read_config()
-
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
         settings.listen_client_address,
         settings.listen_client_port))
