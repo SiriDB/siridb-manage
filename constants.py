@@ -13,7 +13,7 @@ DURATIONS = {
     '2w': [1209600, '2 weeks'],
     '4w': [2419200, '4 weeks']}
 
-
+MAX_NUMBER_DB = 4
 
 DBPROPS = [
     'timezone',

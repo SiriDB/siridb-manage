@@ -11,6 +11,7 @@ import getpass
 import uuid
 import pickle
 import qpack
+import time
 from settings import Settings
 from constants import DEFAULT_TIMEZONE
 from constants import DEFAULT_DROP_THRESHOLD
@@ -21,6 +22,7 @@ from constants import MAX_BUFFER_SIZE
 from constants import DEFAULT_CONFIG
 from constants import DEFAULT_CLIENT_PORT
 from constants import DBPROPS
+from constants import MAX_NUMBER_DB
 from version import __version__
 from version import __version_info__
 from version import __email__
@@ -311,6 +313,10 @@ def check_dbname(s):
     check_valid_dbname(s)
     if s in local_siridb_info.dblist:
         raise ValueError('Database {!r} already exists'.format(s))
+    if len(local_siridb_info.dblist) >= MAX_NUMBER_DB:
+        raise ValueError(
+            'Cannot create {!r} because the maximum number of '
+            'databases is reached. (max={})'.format(s, MAX_NUMBER_DB))
 
 
 def check_loaded(dbname):
@@ -597,6 +603,8 @@ def create_and_register_server(dbname,
         settings.listen_client_address,
         settings.listen_client_port))
 
+    time.sleep(1)
+
     try:
         check_loaded(dbname)
     except Exception as e:
@@ -863,6 +871,8 @@ def create_new_database(dbname,
         dbpath,
         settings.listen_client_address,
         settings.listen_client_port))
+
+    time.sleep(1)
 
     try:
         check_loaded(dbname)
