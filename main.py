@@ -1006,7 +1006,7 @@ if __name__ == '__main__':
         '-l', '--log-level',
         default='info',
         help='set the log level (ignored in wizard mode)',
-        choices=['debug', 'info'])
+        choices=['debug', 'info', 'warning', 'error', 'critical'])
 
     subparsers = parser.add_subparsers(
         dest='action',
@@ -1116,9 +1116,13 @@ Home-page: http://siridb.net
                         settings.listen_client_address,
                         settings.listen_client_port))
 
+    logging.error(local_siridb_info.version.split('.')[:2])
+    logging.error(__version_info__[:2])
 
     # Check if this tool and the SiriDB Server have the same version number
-    if local_siridb_info.version != __version__:
+    if tuple(map(
+            int,
+            local_siridb_info.version.split('.')[:2])) != __version_info__[:2]:
         quit_manage(2,
                     'SiriDB Server (version {}) should have the same version '
                     'as this manage tool (version {})'
