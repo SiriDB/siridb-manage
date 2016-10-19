@@ -1006,7 +1006,7 @@ if __name__ == '__main__':
         '-l', '--log-level',
         default='info',
         help='set the log level (ignored in wizard mode)',
-        choices=['debug', 'info', 'warning', 'error', 'critical'])
+        choices=['debug', 'info'])
 
     subparsers = parser.add_subparsers(
         dest='action',
@@ -1062,17 +1062,24 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    formatter = logging.Formatter(fmt='%(message)s', style='%')
+
+    logger = logging.getLogger()
+    logger.setLevel(args.log_level.upper())
+
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+
     if args.version:
         quit_manage(0, '''
-SiriDB {version} manage tool
+SiriDB Manage {version}
 Maintainer: {maintainer} <{email}>
 Home-page: http://siridb.net
         '''.strip().format(version=__version__,
                            maintainer=__maintainer__,
                            email=__email__))
-
-    logger = logging.getLogger()
-    logger.setLevel(args.log_level.upper())
 
     # Check for root
     if not args.noroot and not os.geteuid() == 0:

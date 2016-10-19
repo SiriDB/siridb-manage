@@ -8,10 +8,10 @@ import subprocess
 import shutil
 import stat
 import re
-
+import argparse
 from version import __version__
 
-
+CHANGELOG_FILE = 'ChangeLog'
 
 def _get_changelog(version):
     with open('ChangeLog-{}'.format(version), 'r') as f:
@@ -27,21 +27,29 @@ def _get_distribution():
 
 
 if __name__ == '__main__':
-    # Run setup.py to create executable
-    subprocess.call(['python3', 'setup.py', 'build'])
+    parser = argparse.ArgumentParser()
 
-    # Read the current version
-    if __version__ is None:
-        exit('Cannot find version in file: {}'.format(VERSION_FILE))
+    parser.add_argument(
+        '-r',
+        '--rev',
+        type=int,
+        default=0,
+        help='Debian Revision number.')
 
-    changelog = _get_changelog(__version__)
-    # Explain architecture= amd64
-    # The architecture is AMD64-compatible and Debian AMD64 will run on AMD and
-    # Intel processors with 64-bit support.
-    # Because of the technology paternity, Debian uses the name "AMD64".
+    parser.add_argument(
+        '-f',
+        '--force',
+        action='store_true',
+        help='Overwrite existing build.')
+
+    args = parser.parse_args()
+
+    version = __version__
+    if args.rev:
+        version += '-{}'.format(args.rev)
 
     config = dict(
-        version=__version__,
+        version=version,
         name='Jeroen van der Heijden',
         email='jeroen@transceptor.technology',
         company='Transceptor Technology',
@@ -65,14 +73,34 @@ if __name__ == '__main__':
         '''.rstrip(),
         explain='create and extend a SiriDB time series database',
         depends='${shlibs:Depends}, '
-                '${misc:Depends}',
-        changelog=changelog.strip()
+                '${misc:Depends}'
     )
+
+    with open(CHANGELOG_FILE, 'r') as f:
+        current_changelog = f.read()
+
+    if '{package} ({version})'.format(
+            **config) in current_changelog:
+        if not args.force:
+            raise ValueError(
+                'Version {} already build. Use -r <revision> to create a new '
+                'revision number or use -f to overwrite the existing pacakge'
+                .format(version))
+        changelog = None
+    else:
+        changelog = _get_changelog(version)
+        config.update(dict(
+            changelog=changelog.strip()
+        ))
+
+    # Run setup.py to create executable
+    subprocess.call(['python3', 'setup.py', 'build'])
 
     OVERRIDES = open(
         'deb/OVERRIDES', 'r').read().strip().format(**config)
-    CHANGELOG = open(
-        'deb/CHANGELOG', 'r').read().strip().format(**config)
+    if changelog:
+        CHANGELOG = open(
+            'deb/CHANGELOG', 'r').read().strip().format(**config)
     CONTROL = open(
         'deb/CONTROL', 'r').read().strip().format(**config)
     MANPAGE = open(
@@ -124,7 +152,7 @@ if __name__ == '__main__':
     else:
         current_changelog = ''
 
-    if '{package} ({version})'.format(**config) not in current_changelog:
+    if changelog:
         changelog = CHANGELOG + '\n\n' + current_changelog
 
         with open(changelog_file, 'w') as f:
