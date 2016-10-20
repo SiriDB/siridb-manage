@@ -321,7 +321,7 @@ def check_dbname(s):
 
 def check_loaded(dbname):
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
-        settings.listen_client_address,
+        'localhost',
         settings.listen_client_port))
     if dbname not in local_siridb_info.dblist:
         raise ValueError('Database {!r} is not loaded, please check the '
@@ -427,10 +427,8 @@ def join_database():
         dbname = remote_siridb_info.dblist[int(db)]
 
         if dbname in local_siridb_info.dblist:
-            print_error('Database "{}" already exist on server {}:{}'.format(
-                dbname,
-                settings.listen_client_address,
-                settings.listen_client_port))
+            print_error('Database "{}" already exist on this server'.format(
+                dbname))
             continue
 
         username = ask_string(
@@ -544,7 +542,7 @@ def create_and_register_server(dbname,
         shutil.rmtree(dbpath)
         quit_manage(*args)
 
-    address = settings.listen_backend_address
+    address = settings.server_address
     port = settings.listen_backend_port
     _uuid = uuid.uuid1()
 
@@ -600,7 +598,7 @@ def create_and_register_server(dbname,
 
     asyncio.get_event_loop().run_until_complete(load_database(
         dbpath,
-        settings.listen_client_address,
+        'localhost',
         settings.listen_client_port))
 
     time.sleep(1)
@@ -869,7 +867,7 @@ def create_new_database(dbname,
 
     asyncio.get_event_loop().run_until_complete(load_database(
         dbpath,
-        settings.listen_client_address,
+        'localhost',
         settings.listen_client_port))
 
     time.sleep(1)
@@ -1116,14 +1114,14 @@ Home-page: http://siridb.net
     settings.config_file = args.config
     settings.read_config()
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
-        settings.listen_client_address,
+        'localhost',
         settings.listen_client_port))
 
     if local_siridb_info is None:
         quit_manage(2,
                     'Unable to get local SiriDB info, please check if '
                     'SiriDB is running and listening to {}:{}.'.format(
-                        settings.listen_client_address,
+                        'localhost',
                         settings.listen_client_port))
 
     logging.error(local_siridb_info.version.split('.')[:2])
