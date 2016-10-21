@@ -189,7 +189,7 @@ def not_empty(s):
 
 def quit_manage(exit_code=0, msg='Exit manage SiriDB... bye!'):
     if siri:
-        logging.info('close siridb connection')
+        logging.debug('Close siridb connection')
         siri.close()
 
     if exit_code:
@@ -321,7 +321,7 @@ def check_dbname(s):
 
 def check_loaded(dbname):
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
-        'localhost',
+        settings.localhost,
         settings.listen_client_port))
     if dbname not in local_siridb_info.dblist:
         raise ValueError('Database {!r} is not loaded, please check the '
@@ -598,7 +598,7 @@ def create_and_register_server(dbname,
 
     asyncio.get_event_loop().run_until_complete(load_database(
         dbpath,
-        'localhost',
+        settings.localhost,
         settings.listen_client_port))
 
     time.sleep(1)
@@ -867,7 +867,7 @@ def create_new_database(dbname,
 
     asyncio.get_event_loop().run_until_complete(load_database(
         dbpath,
-        'localhost',
+        settings.localhost,
         settings.listen_client_port))
 
     time.sleep(1)
@@ -1114,18 +1114,15 @@ Home-page: http://siridb.net
     settings.config_file = args.config
     settings.read_config()
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
-        'localhost',
+        settings.localhost,
         settings.listen_client_port))
 
     if local_siridb_info is None:
         quit_manage(2,
                     'Unable to get local SiriDB info, please check if '
                     'SiriDB is running and listening to {}:{}.'.format(
-                        'localhost',
+                        settings.localhost,
                         settings.listen_client_port))
-
-    logging.error(local_siridb_info.version.split('.')[:2])
-    logging.error(__version_info__[:2])
 
     # Check if this tool and the SiriDB Server have the same version number
     if tuple(map(

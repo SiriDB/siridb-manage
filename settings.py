@@ -16,6 +16,12 @@ from constants import DEFAULT_CONFIG_FILE
 config = configparser.RawConfigParser()
 config.optionxform = str  # Enable a case sensitive configuration file
 
+IP_SUPPORT_MAP = {
+    'ALL' : '127.0.0.1',
+    'IPV4ONLY': '127.0.0.1',
+    'IPV6ONLY': '::1'
+}
+
 class Settings:
 
     def __init__(self):
@@ -23,6 +29,7 @@ class Settings:
 
     @staticmethod
     def _get_address(addr, fn):
+        addr = addr.replace('%HOSTNAME', socket.gethostname())
         try:
             address, port = \
                 addr[:addr.rfind(':')], int(addr[addr.rfind(':') + 1:])
@@ -59,4 +66,9 @@ class Settings:
 
         self.default_db_path = config.get('siridb', 'default_db_path')
 
+        ip_support = config.get('siridb', 'ip_support')
+        if ip_support not in IP_SUPPORT_MAP:
+            ip_support = 'ALL'
+
+        self.localhost = IP_SUPPORT_MAP[ip_support]
 
