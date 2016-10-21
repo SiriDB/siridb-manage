@@ -1,3 +1,18 @@
+siridb-manage (2.0.1) xenial; urgency=medium
+
+  * Added log levels warning, error and critical. (issue #1)
+
+  * Only compare MAJOR and MINOR for a valid SiriDB version. (issue #2)
+
+  * Added check for maximum number of databases. (issue #3)
+
+  * Updated manage tool for being compliant with the current
+    configuration file. (issue #4)
+
+  * Changed a few log lines. (some message are only for debug purpose)
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Fri, 21 Oct 2016 14:34:30 +0000
+
 siridb-manage (2.0.0) xenial; urgency=medium
 
   * Manage Tool for SiriDB version 2.x
