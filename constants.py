@@ -46,6 +46,6 @@ DEFAULT_CONFIG = '''
 # Path used to save the buffer files.
 # In case you later plan to change this location you have to manually move the
 # buffer file to the new location.
-path = {buffer_path}
+{comment_buffer_path}path = {buffer_path}
 
 '''

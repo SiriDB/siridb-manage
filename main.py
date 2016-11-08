@@ -102,7 +102,10 @@ def create_database(
     with open(os.path.join(dbpath, 'database.conf'),
               'w',
               encoding='utf-8') as f:
-        f.write(DEFAULT_CONFIG.format(**_config))
+        f.write(DEFAULT_CONFIG.format(
+            comment_buffer_path=
+                '# ' if _config['buffer_path'] == dbpath else '',
+            **_config))
 
     db_obj = [
         1,                                          # shema version
@@ -716,7 +719,7 @@ def _arg_buffer_path(parser):
     parser.add_argument(
         '--buffer-path',
         type=str,
-        default=None,
+        default="",
         help='Alternative location for storing the buffer file.')
 
 
@@ -842,11 +845,13 @@ def form_create_new_database():
     cfg = {'buffer_path': buffer_path}
 
     ask_buffer_size(cfg)
+
     create_new_database(dbname,
                         dbpath,
                         time_precision,
                         duration_log,
                         duration_num,
+                        cfg.pop('buffer_size'),
                         cfg)
 
 
@@ -855,6 +860,7 @@ def create_new_database(dbname,
                         time_precision,
                         duration_log,
                         duration_num,
+                        buffer_size,
                         cfg):
     create_database(
         dbname=dbname,
@@ -862,6 +868,7 @@ def create_new_database(dbname,
         time_precision=time_precision,
         duration_log=duration_log,
         duration_num=duration_num,
+        buffer_size=buffer_size,
         config=cfg)
     logging.info('Created database {!r}'.format(dbname))
 
@@ -904,6 +911,7 @@ def parse_create_new(args):
     try:
         check_dbname(args.dbname)
         check_valid_buffer_size(args.buffer_size)
+
         dbpath = os.path.join(settings.default_db_path, args.dbname)
         mk_path(dbpath)
 
@@ -913,15 +921,14 @@ def parse_create_new(args):
     except Exception as e:
         quit_manage(1, e)
 
-    cfg = {
-        'buffer_path': buffer_path,
-        'buffer_size': args.buffer_size,
-    }
+    cfg = {'buffer_path': buffer_path}
+
     create_new_database(args.dbname,
                         dbpath,
                         args.time_precision,
                         args.duration_log,
                         args.duration_num,
+                        args.buffer_size,
                         cfg)
 
 
