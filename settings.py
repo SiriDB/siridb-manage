@@ -7,6 +7,7 @@ on this server.
 '''
 
 import os
+import sys
 import logging
 import socket
 import configparser
@@ -22,6 +23,11 @@ IP_SUPPORT_MAP = {
     'IPV6ONLY': '::1'
 }
 
+_ADDRESS_ERROR_MSG = '''
+Cannot connect to "{}". Check the server_name specified in "{}" and check if
+SiriDB is running. (or specify a different configuration file)
+'''
+
 class Settings:
 
     def __init__(self):
@@ -34,9 +40,9 @@ class Settings:
             address, port = \
                 addr[:addr.rfind(':')], int(addr[addr.rfind(':') + 1:])
         except ValueError:
-            raise ValueError(__ADDRESS_ERROR_MSG.format(addr, fn))
+            raise ValueError(_ADDRESS_ERROR_MSG.format(addr, fn))
         if not 1 < port < 2 ** 16:
-            raise ValueError(__ADDRESS_ERROR_MSG.format(addr, fn))
+            raise ValueError(_ADDRESS_ERROR_MSG.format(addr, fn))
 
         try:
             if address.startswith('[') and address.endswith(']'):
@@ -48,7 +54,7 @@ class Settings:
             try:
                 socket.gethostbyname(address)
             except socket.error:
-                raise ValueError(__ADDRESS_ERROR_MSG.format(addr, fn))
+                raise ValueError(_ADDRESS_ERROR_MSG.format(addr, fn))
         return address, port
 
     def read_config(self):

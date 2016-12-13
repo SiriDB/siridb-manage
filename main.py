@@ -1119,7 +1119,12 @@ Home-page: http://siridb.net
 
     # Read configuration
     settings.config_file = args.config
-    settings.read_config()
+
+    try:
+        settings.read_config()
+    except Exception as e:
+        quit_manage(2, str(e))
+
     asyncio.get_event_loop().run_until_complete(set_local_siridb_info(
         settings.localhost,
         settings.listen_client_port))
