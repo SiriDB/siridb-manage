@@ -116,7 +116,7 @@ if __name__ == '__main__':
     if os.path.isdir(temp_path):
         shutil.rmtree(temp_path)
 
-    source_path = os.path.join('build', __version__)
+    source_path = os.path.join('build', 'siridb-manage')
     if not os.path.isdir(source_path):
         sys.exit('ERROR: Cannot find path: {}'.format(source_path))
 
@@ -157,8 +157,8 @@ if __name__ == '__main__':
     if changelog:
         changelog = CHANGELOG + '\n\n' + current_changelog
 
-        with open(changelog_file, 'w') as f:
-            f.write(changelog)
+    with open(changelog_file, 'w') as f:
+        f.write(changelog)
 
     shutil.copy(changelog_file, os.path.join(debian_path, 'changelog'))
 

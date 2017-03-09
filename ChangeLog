@@ -1,3 +1,13 @@
+siridb-manage (2.0.2) yakkety; urgency=medium
+
+  * Fixed handling the buffer_path argument. (issue #5)
+
+  * Fixed error message when an invalid server_name is used. (issue #6)
+
+  * Update siridb-connector and qpack
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Thu, 09 Mar 2017 13:22:41 +0000
+
 siridb-manage (2.0.1) xenial; urgency=medium
 
   * Added log levels warning, error and critical. (issue #1)
