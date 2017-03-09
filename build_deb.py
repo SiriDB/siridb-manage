@@ -157,8 +157,8 @@ if __name__ == '__main__':
     if changelog:
         changelog = CHANGELOG + '\n\n' + current_changelog
 
-    with open(changelog_file, 'w') as f:
-        f.write(changelog)
+        with open(changelog_file, 'w') as f:
+            f.write(changelog)
 
     shutil.copy(changelog_file, os.path.join(debian_path, 'changelog'))
 
