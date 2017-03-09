@@ -116,7 +116,7 @@ if __name__ == '__main__':
     if os.path.isdir(temp_path):
         shutil.rmtree(temp_path)
 
-    source_path = os.path.join('build', 'siridb-manage')
+    source_path = os.path.join('dist', 'siridb-manage')
     if not os.path.isdir(source_path):
         sys.exit('ERROR: Cannot find path: {}'.format(source_path))
 
