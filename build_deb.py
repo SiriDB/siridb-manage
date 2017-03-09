@@ -95,8 +95,8 @@ if __name__ == '__main__':
             changelog=changelog.strip()
         ))
 
-    # Run setup.py to create executable
-    subprocess.call(['python3', 'setup.py', 'build'])
+    # Run pyinstaller to create executable
+    subprocess.call(['pyinstaller', 'siridb-manage.spec'])
 
     OVERRIDES = open(
         'deb/OVERRIDES', 'r').read().strip().format(**config)
