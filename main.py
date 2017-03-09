@@ -43,6 +43,7 @@ siri = None
 local_siridb_info = None
 remote_siridb_info = None
 
+
 def check_valid_dbname(dbname):
     if not isinstance(dbname, str):
         raise ValueError(
@@ -103,9 +104,9 @@ def create_database(
               'w',
               encoding='utf-8') as f:
         f.write(DEFAULT_CONFIG.format(
-            comment_buffer_path=
-                '# ' if _config['buffer_path'] == dbpath else '',
-            **_config))
+            comment_buffer_path='# '
+            if _config['buffer_path'] == dbpath else '',
+                **_config))
 
     db_obj = [
         1,                                          # shema version
@@ -425,7 +426,9 @@ def join_database():
 
         db = menu(
             title='Database',
-            options=Options([{'option': str(i), 'text': s} for i, s in enumerate(remote_siridb_info.dblist)]),
+            options=Options([
+                {'option': str(i), 'text': s}
+                for i, s in enumerate(remote_siridb_info.dblist)]),
             default='0')
         dbname = remote_siridb_info.dblist[int(db)]
 
@@ -524,13 +527,15 @@ def create_joined_database(dbpath, buffer_path, pool, new_pool, action_str):
                                new_pool,
                                allow_retry=True)
 
+
 def get_time_precision(s):
     _map = ['s', 'ms', 'us', 'ns']
     return _map.index(s)
 
 
 def get_duration(tp, duration):
-    return duration if isinstance(duration, int) else DURATIONS[duration][0] * (1000**tp)
+    return duration if isinstance(duration, int) \
+        else DURATIONS[duration][0] * (1000**tp)
 
 
 def create_and_register_server(dbname,
@@ -597,7 +602,7 @@ def create_and_register_server(dbname,
                 1,
                 'All servers must have status {!r} '
                 'before we can continue. As least {!r} has status {!r}'
-                .format(expected, srv[0], srv[1]));
+                .format(expected, srv[0], srv[1]))
 
     asyncio.get_event_loop().run_until_complete(load_database(
         dbpath,
@@ -830,7 +835,8 @@ def form_create_new_database():
         ]),
         default='ms')
 
-    duration_options = [{'option': k, 'text': v[1]} for k, v in DURATIONS.items()]
+    duration_options = [
+        {'option': k, 'text': v[1]} for k, v in DURATIONS.items()]
 
     duration_num = menu(
         title='Number (float and integer) sharding duration',
@@ -974,7 +980,6 @@ def parse_create_replica_or_pool(args):
 
         else:
             pool = len(result['pools'])
-
 
         dbconfig = siri.query('show {}'.format(','.join(DBPROPS)))
     except Exception as e:
