@@ -1,3 +1,8 @@
+IMPORTANT NOTICE
+================
+This tool is depricated and replaced with the SiriDB Admim tool: https://github.com/transceptor-technology/siridb-admin
+
+
 SiriDB Manage Tool
 ==================
 
